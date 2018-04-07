@@ -8,6 +8,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Sample.NetCoreNorhwind.Entities;
+using Sample.NetCoreNorthwind.Context;
+using Microsoft.EntityFrameworkCore;
+using System.IO;
+using Sample.NetCoreNorthwind.Repositories;
+using Sample.NetCoreNorthwind.Service;
 
 namespace Sample.NetCoreNorthwind.Web
 {
@@ -23,6 +29,13 @@ namespace Sample.NetCoreNorthwind.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
+            //Configuration = builder.Build();
+            services.AddDbContext<NorthwindDB>(o => o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<CategoryRepository>();
+            services.AddScoped<ProductRepository>();
+            services.AddScoped<CategoryService>();
+            services.AddScoped<ProductService>();
             services.AddMvc();
         }
 
